@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moie_explorer/second.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:moie_explorer/PostData.dart';
 import 'package:provider/provider.dart';
-
-import 'NumberProvider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,34 +13,39 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+  void initState() {
+    super.initState();
+    final postData = Provider.of<PostData>(context, listen: false);
+    postData.getPostData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Consumer<NumberProvider>(
-      builder: (context, provider, child) {
-        final numbers = provider.numbers;
+    return Consumer<PostData>(
+      builder: (context, postData, child) {
         return Scaffold(
           appBar: AppBar(),
-          body: SizedBox(
-            child: Column(
-              children: [
-                Text(numbers.last.toString(), style: TextStyle(fontSize: 30),),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: numbers.length,
-                    itemBuilder: (context, index) {
-                      return Text(numbers[index].toString(), style: TextStyle(fontSize: 20),);
-                    },),
-                ),
-                ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Second()));
-                    },
-                    child: Text("Navigate"))
-              ],
+          body: postData.isLoading? const Center(
+            child: SpinKitThreeBounce(color: Colors.blue, size: 30),
+          ) :
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text(
+                    postData.post?.title ?? "",
+                    style: TextStyle(
+                        fontSize: 24
+                    ),),
+                  Text(
+                    postData.post?.body ?? "",
+                    style: TextStyle(
+                        fontSize: 18
+                    ),),
+                ],
+              ),
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: provider.add,
-            child: Icon(Icons.add),
           ),
         );
       },
