@@ -4,11 +4,13 @@
 
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
-class UserModel {
+class UserModel extends Equatable {
   final int id;
   final String name;
   final String username;
@@ -46,9 +48,13 @@ class UserModel {
     "website": website,
     "company": company.toJson(),
   };
+
+  @override
+  List<Object?> get props =>
+      [id, name, username, email, phone, website, company];
 }
 
-class Company {
+class Company extends Equatable {
   final String name;
   final String catchPhrase;
   final String bs;
@@ -70,4 +76,7 @@ class Company {
     "catchPhrase": catchPhrase,
     "bs": bs,
   };
+
+  @override
+  List<Object?> get props => [name, catchPhrase, bs];
 }

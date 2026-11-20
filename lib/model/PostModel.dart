@@ -1,11 +1,13 @@
 
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 PostModel postModelFromJson(String str) => PostModel.fromJson(json.decode(str));
 
 String postModelToJson(PostModel data) => json.encode(data.toJson());
 
-class PostModel {
+class PostModel extends Equatable {
   final int userId;
   final int id;
   final String title;
@@ -31,4 +33,7 @@ class PostModel {
     "title": title,
     "body": body,
   };
+
+  @override
+  List<Object?> get props => [userId, id, title, body];
 }
